@@ -40,7 +40,7 @@ systemctl start mysqld &>>$LOGFILE
 VALIDATE $? "Starting MySQL Server"
 
 # mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
-# VALIDATE $? "Setting up root password"
+# VALIDATE $? "Setting up root password"assd
 
 #Below code will be useful for idempotent nature
 mysql -h db.daws78s.online -uroot -p${mysql_root_password} -e 'show databases;' &>>$LOGFILE
