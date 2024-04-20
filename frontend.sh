@@ -48,7 +48,7 @@ VALIDATE $? "Extracting frontend code"
 
 #check your repo and path
 cp /home/ec2-user/expense-shell/expense.conf /etc/nginx/default.d/expense.conf &>>$LOGFILE
-VALIDATE $? "Copied expense conf"
+VALIDATE $? "Copied expense conf" #create expense.conf file , bcz shell script cant  open vim file
 
 systemctl restart nginx &>>$LOGFILE
 VALIDATE $? "Restarting nginx"
