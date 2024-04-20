@@ -9,7 +9,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 echo "Please enter DB password:"
-read -s mysql_root_password
+read -s mysql_root_password  # here we r entering password ExpenseApp@1 while running (-s we cant c pswd)
 
 VALIDATE(){
    if [ $1 -ne 0 ]
@@ -39,7 +39,7 @@ dnf install nodejs -y &>>$LOGFILE
 VALIDATE $? "Installing nodejs"
 
 id expense &>>$LOGFILE
-if [ $? -ne 0 ]    # if exit status is not equal to 0 then adduser expense else skip it
+if [ $? -ne 0 ]    # if exit status is not equal to 0 then adduser 'expense' else skip it
 then
     useradd expense &>>$LOGFILE    #its not idempotent bcz we cant add same user again in server 
     VALIDATE $? "Creating expense user"
@@ -54,8 +54,8 @@ curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expen
 VALIDATE $? "Downloading backend code"
 
 cd /app
-rm -rf /app/*
-unzip /tmp/backend.zip &>>$LOGFILE
+rm -rf /app/*   #here when there is deployment we r removing the old code(/* -->removing content of that folder)
+unzip /tmp/backend.zip &>>$LOGFILE  #removing and then unziping, so
 VALIDATE $? "Extracted backend code"
 
 npm install &>>$LOGFILE
@@ -79,7 +79,7 @@ dnf install mysql -y &>>$LOGFILE
 VALIDATE $? "Installing MySQL Client"
 
 mysql -h db.daws78s.online -uroot -p${mysql_root_password} < /app/schema/backend.sql &>>$LOGFILE
-VALIDATE $? "Schema loading"
+VALIDATE $? "Schema loading" # here this command its self is idempotent
 
 systemctl restart backend &>>$LOGFILE
 VALIDATE $? "Restarting Backend"
