@@ -39,15 +39,15 @@ dnf install nodejs -y &>>$LOGFILE
 VALIDATE $? "Installing nodejs"
 
 id expense &>>$LOGFILE
-if [ $? -ne 0 ]
+if [ $? -ne 0 ]    # if exit status is not equal to 0 then adduser expense else skip it
 then
-    useradd expense &>>$LOGFILE
+    useradd expense &>>$LOGFILE    #its not idempotent bcz we cant add same user again in server 
     VALIDATE $? "Creating expense user"
 else
     echo -e "Expense user already created...$Y SKIPPING $N"
 fi
 
-mkdir -p /app &>>$LOGFILE
+mkdir -p /app &>>$LOGFILE # -p if directory is already created it wil be silent, if not created it wil create
 VALIDATE $? "Creating app directory"
 
 curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip &>>$LOGFILE
@@ -59,7 +59,8 @@ unzip /tmp/backend.zip &>>$LOGFILE
 VALIDATE $? "Extracted backend code"
 
 npm install &>>$LOGFILE
-VALIDATE $? "Installing nodejs dependencies"
+VALIDATE $? "Installing nodejs dependencies"  
+# after this step, shell script cannot open vim,for that create the backend.service file s12-30:22
 
 #check your repo and path
 cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.service &>>$LOGFILE
